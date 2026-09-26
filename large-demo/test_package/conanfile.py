@@ -5,6 +5,11 @@ from conan.tools.files import load
 
 
 class TestPackageConan(ConanFile):
+    def layout(self):
+        # Keep Conan's generated env scripts out of the source tree (build/ is gitignored)
+        self.folders.build = "build"
+        self.folders.generators = "build"
+
     def requirements(self):
         self.requires(self.tested_reference_str)
 

@@ -10,3 +10,4 @@ wheels/
 .venv
 
 CMakeUserPresets.json
+.ruff_cache
