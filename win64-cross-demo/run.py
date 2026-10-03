@@ -16,7 +16,7 @@ touched), with the conan_config working copy (--config, default ../conan_config)
      (the CMake toolchain) and wine; cmake and ninja come from ConanCenter
    - cross-builds fmt and zlib from ConanCenter for Windows with clang-cl
    - builds hello.exe, and ctest runs its self-test through wine
-3. runs hello.exe under wine (`conan-wine` from the wine package)
+3. runs hello.exe with `conan wine:run` (conan_config's command for the wine package)
 
 Downloads (~3 GB the first time: the Microsoft CRT/SDK is ~1.7 GB, LLVM 1.1 GB,
 wine 100 MB) are cached in ~/.cache/conan-win64-cross-demo-downloads and reused by
@@ -27,7 +27,6 @@ https://go.microsoft.com/fwlink/?LinkId=2086102
 
 import argparse
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -99,9 +98,7 @@ def main():
         )
 
         exe = next(output.rglob("hello.exe"))
-        wine = next(conan.home.rglob("bin/conan-wine"))  # from the wine package
-        print(f"\n$ conan-wine {exe.relative_to(work)}", flush=True)
-        subprocess.run([str(wine), str(exe)], check=True)
+        conan("wine:run", str(exe), show=True)
     finally:
         if not args.keep:
             shutil.rmtree(work, ignore_errors=True)

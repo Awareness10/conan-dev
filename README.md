@@ -31,6 +31,7 @@ to point them somewhere else.
 | `parallel-demo/` | Parallel uploads and downloads against a local, rate-limited server |
 | `libdatachannel-demo/` | A full from-source build of libdatachannel and its dependencies, then upload and removal |
 | `win64-cross-demo/` | Cross-compiles a Windows program on Linux with the `windows-x64-clangcl` profile and runs its test under wine |
+| `win64-game-demo/` | Breakout with raylib, cross-built into a standalone Windows `.exe` |
 | `demo_remote.py` | Shared helpers for the scripted demos: an isolated Conan home and the local demo remote |
 
 ## The demos
@@ -126,7 +127,7 @@ What it does:
    - cross-builds fmt and zlib from ConanCenter with clang-cl
    - builds `hello.exe`; `ctest` runs its self-test through wine
      (`CMAKE_CROSSCOMPILING_EMULATOR`)
-3. Runs `hello.exe` with `conan-wine`. It prints the Windows version wine reports,
+3. Runs `hello.exe` with `conan wine:run`. It prints the Windows version wine reports,
    the clang-cl version and the MSVC ABI version (1944).
 
 Notes:
@@ -148,6 +149,37 @@ Notes:
 
 See conan_config's README ("Cross-compiling for Windows") for the profile, the
 recipes and where each download comes from.
+
+### `win64-game-demo/`: a Windows game
+
+Breakout written in C with [raylib](https://www.raylib.com) 6.0 from ConanCenter,
+cross-built with the same profile. It has particles, screen shake, score and lives.
+
+- **Move:** arrow keys, A/D, or the mouse.
+- **Launch:** Space or click.
+- **Restart:** R. **Quit:** Esc.
+
+Run it with your normal Conan home:
+
+```bash
+cd win64-game-demo
+conan build . -pr:h windows-x64-clangcl -s:h compiler.runtime=static --build=missing \
+    -c:a user.msvc_sysroot:accept_license=True
+conan wine:run --wayland build/Release/breakout.exe   # play it on Linux
+```
+
+**A standalone `.exe`:**
+
+- `compiler.runtime=static` puts the C runtime into the `.exe`, so it imports
+  only DLLs that ship with Windows (`KERNEL32`, `USER32`, `GDI32`, `SHELL32`,
+  `WINMM`). No Visual C++ redistributable is needed; copy `breakout.exe` (~680 KB)
+  to any Windows 10/11 machine.
+- It's linked as a GUI program, so it opens no console window.
+
+**Why `--wayland`:** under XWayland on Hyprland, the window opened off-screen,
+because XWayland and Hyprland disagreed on the monitor order. `--wayland` makes
+wine use its native Wayland driver, so the compositor places the window. See
+conan_config's README (`conan wine:run`).
 
 ## `demo_remote.py`
 
