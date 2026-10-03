@@ -32,7 +32,6 @@ to point them somewhere else.
 | `libdatachannel-demo/` | A full from-source build of libdatachannel and its dependencies, then upload and removal |
 | `win64-cross-demo/` | Cross-compiles a Windows program on Linux with the `windows-x64-clangcl` profile and runs its test under wine |
 | `demo_remote.py` | Shared helpers for the scripted demos: an isolated Conan home and the local demo remote |
-| `src/conan_dev/` | Placeholder package for the `conan-dev` entry point (prints a greeting) |
 
 ## The demos
 
