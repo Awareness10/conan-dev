@@ -12,13 +12,13 @@ touched), with the conan_config working copy (--config, default ../conan_config)
    the first conan command adds them as the "conan_config" remote
 2. `conan build win64-cross-demo -pr:h windows-x64-clangcl --build=missing`:
    - builds the tool packages from the conan_config recipes: xwin, msvc-sysroot
-     (MSVC CRT + Windows SDK), llvm-mingw (clang-cl, lld-link), clang-cl-cross
+     (MSVC CRT + Windows SDK), llvm (official LLVM release + ICU 70), clang-cl-cross
      (the CMake toolchain) and wine; cmake and ninja come from ConanCenter
    - cross-builds fmt and zlib from ConanCenter for Windows with clang-cl
    - builds hello.exe, and ctest runs its self-test through wine
 3. runs hello.exe under wine (`conan-wine` from the wine package)
 
-Downloads (~2 GB the first time: the Microsoft CRT/SDK is ~1.7 GB, LLVM 80 MB,
+Downloads (~3 GB the first time: the Microsoft CRT/SDK is ~1.7 GB, LLVM 1.1 GB,
 wine 100 MB) are cached in ~/.cache/conan-win64-cross-demo-downloads and reused by
 later runs, even without --keep. --accept-msvc-license is required because the
 msvc-sysroot package downloads the Microsoft CRT and Windows SDK:
